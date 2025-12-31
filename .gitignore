@@ -10,3 +10,5 @@ venv/
 .venv/
 env/
 my-data.json
+*.zip
+response.json
