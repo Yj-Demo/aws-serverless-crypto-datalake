@@ -79,14 +79,7 @@ resource "aws_glue_catalog_table" "raw_table" {
       name = "ethereum"
       type = "struct<usd:double,last_updated_at:bigint>"
     }
-
-    # 这里的 date 是分区键
-    columns {
-        name = "date"
-        type = "string"
-    }
-  }
-
+ }
   partition_keys {
     name = "date"
     type = "string"
