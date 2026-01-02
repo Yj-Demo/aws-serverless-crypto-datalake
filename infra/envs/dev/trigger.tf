@@ -22,3 +22,20 @@ resource "aws_lambda_permission" "allow_eventbridge" {
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.schedule.arn
 }
+
+# 4. 绑定第二个目标 (把新闻函数也连到闹钟上)
+resource "aws_cloudwatch_event_target" "trigger_news" {
+  # 指向现有的那个规则 (resource名是 "schedule")
+  rule      = aws_cloudwatch_event_rule.schedule.name
+  target_id = "TriggerNewsAnalyzer"
+  arn       = aws_lambda_function.news_analyzer.arn
+}
+
+# 5. 授予第二个通行证 (允许闹钟调用新闻函数)
+resource "aws_lambda_permission" "allow_cloudwatch_news" {
+  statement_id  = "AllowExecutionFromEventBridgeNews"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.news_analyzer.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.schedule.arn
+}

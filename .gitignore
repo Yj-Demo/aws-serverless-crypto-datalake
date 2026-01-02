@@ -12,3 +12,6 @@ env/
 my-data.json
 *.zip
 response.json
+*.backup
+*test*.py
+check_models.py
