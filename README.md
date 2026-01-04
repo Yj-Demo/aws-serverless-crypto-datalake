@@ -27,6 +27,7 @@ Instead of traditional keyword matching, this system leverages **Generative AI (
 
 ## 🏗️ Architecture
 
+```mermaid
 graph TD
     %% 定义样式类 (AWS 官方配色)
     classDef aws fill:#FF9900,stroke:#232F3E,stroke-width:2px,color:white;
