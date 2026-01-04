@@ -37,18 +37,18 @@ graph TD
 
     subgraph "AWS Cloud (ap-southeast-2)"
         direction TB
-        EB[⏱️ EventBridge Scheduler]:::aws
-        L_Price[λ Lambda: Ingest Prices]:::aws
-        L_News[λ Lambda: AI News Analyzer]:::aws
+        EB["⏱️ EventBridge Scheduler"]:::aws
+        L_Price["λ Lambda: Ingest Prices"]:::aws
+        L_News["λ Lambda: AI News Analyzer"]:::aws
         RDS[("🛢️ Amazon RDS (PostgreSQL)")]:::db
     end
 
     subgraph "External World"
-        RSS[📰 News Feeds (RSS)]:::ext
-        AI[🧠 Google Gemini API]:::ext
+        RSS["📰 News Feeds (RSS)"]:::ext
+        AI["🧠 Google Gemini API"]:::ext
     end
     
-    Grafana[📊 Grafana Dashboard]:::viz
+    Grafana["📊 Grafana Dashboard"]:::viz
 
     %% 连线逻辑
     EB -->|Hourly Trigger| L_Price
