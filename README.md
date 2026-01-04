@@ -27,18 +27,37 @@ Instead of traditional keyword matching, this system leverages **Generative AI (
 
 ## 🏗️ Architecture
 
-```mermaid
 graph TD
+    %% 定义样式类 (AWS 官方配色)
+    classDef aws fill:#FF9900,stroke:#232F3E,stroke-width:2px,color:white;
+    classDef db fill:#3B48CC,stroke:#232F3E,stroke-width:2px,color:white;
+    classDef ext fill:#E0E0E0,stroke:#333,stroke-width:2px,color:black;
+    classDef viz fill:#F46800,stroke:#333,stroke-width:2px,color:white;
+
     subgraph "AWS Cloud (ap-southeast-2)"
-        EB[EventBridge Scheduler] -->|Hourly Trigger| L_Price[Lambda: Ingest Prices]
-        EB -->|Hourly Trigger| L_News[Lambda: AI News Analyzer]
-        
-        L_Price -->|Write Data| RDS[(Amazon RDS PostgreSQL)]
-        
-        L_News -->|1. Fetch RSS| RSS[External News Feeds]
-        L_News -->|2. Inference| AI[Google Gemini API]
-        AI -->|3. Sentiment Score| L_News
-        L_News -->|4. Write Structured Data| RDS
+        direction TB
+        EB[⏱️ EventBridge Scheduler]:::aws
+        L_Price[λ Lambda: Ingest Prices]:::aws
+        L_News[λ Lambda: AI News Analyzer]:::aws
+        RDS[("🛢️ Amazon RDS (PostgreSQL)")]:::db
+    end
+
+    subgraph "External World"
+        RSS[📰 News Feeds (RSS)]:::ext
+        AI[🧠 Google Gemini API]:::ext
     end
     
-    RDS -->|SQL Query| Grafana[Grafana Dashboard]
+    Grafana[📊 Grafana Dashboard]:::viz
+
+    %% 连线逻辑
+    EB -->|Hourly Trigger| L_Price
+    EB -->|Hourly Trigger| L_News
+    
+    L_Price -->|1. Write Price| RDS
+    
+    L_News -->|2. Fetch Data| RSS
+    L_News -->|3. Inference| AI
+    AI -.->|Returns Score| L_News
+    L_News -->|4. Write Sentiment| RDS
+    
+    RDS -->|5. SQL Query| Grafana
